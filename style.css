@@ -10,7 +10,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
-    background-color: #222; /* Dark background for desktop */
+    background-color: #222; 
     display: flex; justify-content: center; min-height: 100vh;
     font-family: 'Poppins', sans-serif; color: var(--text-dark);
     user-select: none;
@@ -20,30 +20,25 @@ body {
 .app-container {
     width: 100%; max-width: var(--max-width);
     background-color: var(--bg-color); 
-    position: relative; /* Essential for splash positioning */
+    position: relative; 
     box-shadow: 0 0 50px rgba(0,0,0,0.5); overflow: hidden;
     height: 100vh; display: flex; flex-direction: column;
 }
 
-/* === 1. SPLASH SCREEN (FIXED) === */
+/* === SPLASH SCREEN === */
 .splash {
-    position: absolute; 
-    top: 0; left: 0; width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: var(--primary); 
     display: flex; justify-content: center; align-items: center;
-    z-index: 99999; /* Highest Z-Index */
-    transition: transform 0.8s ease-in-out;
+    z-index: 99999; transition: transform 0.8s ease-in-out;
 }
 .splash-content { text-align: center; color: white; }
 .splash-header { font-family: 'Playfair Display', serif; font-size: 3.5rem; animation: scaleIn 1s ease; }
 .splash-sub { letter-spacing: 3px; font-size: 0.9rem; text-transform: uppercase; margin-top: 5px; opacity: 0; animation: fadeInUp 1s ease 0.5s forwards; }
 .loader-line { width: 0; height: 2px; background: var(--secondary); margin: 20px auto; animation: loadLine 2.5s ease-in-out forwards; }
+.splash.hidden { transform: translateY(-100%); }
 
-.splash.hidden { 
-    transform: translateY(-100%); /* Curtain Up Animation */
-}
-
-/* === 2. NAV & HERO === */
+/* === NAV & HERO === */
 .mobile-nav {
     position: absolute; top: 0; left: 0; width: 100%; 
     height: 75px; padding: 0 15px; 
@@ -74,7 +69,7 @@ body {
 .hero-text { position: relative; z-index: 2; padding: 25px; color: white; }
 .hero-text h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; }
 
-/* === 3. CONTENT CARDS === */
+/* === CONTENT CARDS === */
 .variants-section { padding: 25px 20px; }
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .section-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary); }
@@ -88,11 +83,35 @@ body {
 .card-tag { font-size: 0.7rem; color: var(--secondary); font-weight: 700; text-transform: uppercase; }
 .delete-btn { position: absolute; right: 5px; top: 5px; color: #ff6b6b; background: none; border: none; font-size: 1.1rem; padding: 10px; }
 
-/* === 4. BOTTOM SHEET MODALS === */
+/* === INFO GRID (View Modal) === */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+}
+.info-box {
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 15px 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.info-box i { color: var(--secondary); font-size: 1.2rem; margin-bottom: 5px; }
+.info-label { font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+.info-value { font-size: 0.85rem; font-weight: 600; color: var(--primary); }
+
+.desc-box { background: #fdfdfd; padding: 15px; border-radius: 10px; border: 1px solid #f0f0f0; margin-top: 10px; }
+
+/* === BOTTOM SHEET MODALS === */
 .modal-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.6); z-index: 900;
-    display: flex; align-items: flex-end; /* Stick to bottom */
+    display: flex; align-items: flex-end; 
     opacity: 0; visibility: hidden; transition: all 0.3s ease;
     backdrop-filter: blur(2px);
 }
@@ -100,7 +119,7 @@ body {
 
 .modal-card {
     background: white; width: 100%; 
-    border-radius: 24px 24px 0 0; /* Rounded top only */
+    border-radius: 24px 24px 0 0; 
     max-height: 85%; overflow-y: auto;
     display: flex; flex-direction: column;
     transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -108,7 +127,6 @@ body {
 }
 .modal-overlay.active .modal-card { transform: translateY(0); }
 
-/* The Handle Notch */
 .modal-notch { width: 40px; height: 5px; background-color: #e0e0e0; border-radius: 10px; margin: 12px auto 5px auto; flex-shrink: 0; }
 .modal-header { padding: 10px 25px 0 25px; display: flex; justify-content: space-between; align-items: center; }
 
@@ -123,15 +141,12 @@ body {
 /* Inputs & Buttons */
 input, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 10px; background: #f9f9f9; font-family: 'Poppins', sans-serif; font-size: 1rem; }
 input:focus, textarea:focus { outline: 2px solid var(--secondary); background: white; }
-.send-btn, .save-btn, .action-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1.05rem; }
-.action-btn { background: var(--secondary); margin-top: 20px; }
+.send-btn, .save-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1.05rem; }
 
-/* Order List Styles */
-.order-item { background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 12px; position: relative; }
-.order-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: 600; color: var(--primary); font-size: 1rem; }
-.order-details { font-size: 0.9rem; color: #666; line-height: 1.4; }
-.order-date { font-size: 0.75rem; color: #aaa; margin-top: 8px; display: block; }
-.delete-order { position: absolute; bottom: 10px; right: 10px; color: #ff6b6b; background: white; border: 1px solid #ff6b6b; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; }
+/* FILE INPUT */
+.file-input-container { margin-bottom: 15px; }
+input[type="file"] { background: white; padding: 10px; font-size: 0.9rem; }
+input[type="file"]::file-selector-button { background-color: var(--secondary); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-right: 10px; }
 
 /* Contact Styling */
 .contact-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
