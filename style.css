@@ -1,0 +1,150 @@
+:root {
+    --primary: #2c5e1a;
+    --secondary: #d4af37;
+    --bg-color: #f4f6f0;
+    --text-dark: #222;
+    --white: #ffffff;
+    --max-width: 480px; 
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    background-color: #222; /* Dark background for desktop */
+    display: flex; justify-content: center; min-height: 100vh;
+    font-family: 'Poppins', sans-serif; color: var(--text-dark);
+    user-select: none;
+}
+
+/* APP FRAME */
+.app-container {
+    width: 100%; max-width: var(--max-width);
+    background-color: var(--bg-color); 
+    position: relative; /* Essential for splash positioning */
+    box-shadow: 0 0 50px rgba(0,0,0,0.5); overflow: hidden;
+    height: 100vh; display: flex; flex-direction: column;
+}
+
+/* === 1. SPLASH SCREEN (FIXED) === */
+.splash {
+    position: absolute; 
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: var(--primary); 
+    display: flex; justify-content: center; align-items: center;
+    z-index: 99999; /* Highest Z-Index */
+    transition: transform 0.8s ease-in-out;
+}
+.splash-content { text-align: center; color: white; }
+.splash-header { font-family: 'Playfair Display', serif; font-size: 3.5rem; animation: scaleIn 1s ease; }
+.splash-sub { letter-spacing: 3px; font-size: 0.9rem; text-transform: uppercase; margin-top: 5px; opacity: 0; animation: fadeInUp 1s ease 0.5s forwards; }
+.loader-line { width: 0; height: 2px; background: var(--secondary); margin: 20px auto; animation: loadLine 2.5s ease-in-out forwards; }
+
+.splash.hidden { 
+    transform: translateY(-100%); /* Curtain Up Animation */
+}
+
+/* === 2. NAV & HERO === */
+.mobile-nav {
+    position: absolute; top: 0; left: 0; width: 100%; 
+    height: 75px; padding: 0 15px; 
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(5px);
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.nav-left { display: flex; gap: 12px; }
+.logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary); font-weight: bold; }
+.nav-icon-btn { 
+    background: var(--secondary); border: none; color: white; 
+    width: 45px; height: 45px; border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; font-size: 1.1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.nav-icon-btn:active { transform: scale(0.95); }
+.secondary-icon { background: #666; } 
+
+.scroll-content { overflow-y: auto; height: 100%; scroll-behavior: smooth; padding-top: 75px; }
+.scroll-content::-webkit-scrollbar { display: none; }
+
+.hero {
+    height: 35vh; position: relative;
+    background: url('https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=600') center/cover;
+    display: flex; align-items: flex-end;
+}
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); }
+.hero-text { position: relative; z-index: 2; padding: 25px; color: white; }
+.hero-text h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; }
+
+/* === 3. CONTENT CARDS === */
+.variants-section { padding: 25px 20px; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.section-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary); }
+.count-badge { background: #e0e0e0; font-size: 0.8rem; padding: 5px 10px; border-radius: 12px; }
+
+.grid-container { display: flex; flex-direction: column; gap: 15px; }
+.card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; height: 110px; }
+.card-image { width: 110px; background-size: cover; background-position: center; }
+.card-content { flex: 1; padding: 12px 15px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+.card h4 { font-size: 1.2rem; font-family: 'Playfair Display', serif; margin-bottom: 5px; }
+.card-tag { font-size: 0.7rem; color: var(--secondary); font-weight: 700; text-transform: uppercase; }
+.delete-btn { position: absolute; right: 5px; top: 5px; color: #ff6b6b; background: none; border: none; font-size: 1.1rem; padding: 10px; }
+
+/* === 4. BOTTOM SHEET MODALS === */
+.modal-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 900;
+    display: flex; align-items: flex-end; /* Stick to bottom */
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    backdrop-filter: blur(2px);
+}
+.modal-overlay.active { opacity: 1; visibility: visible; }
+
+.modal-card {
+    background: white; width: 100%; 
+    border-radius: 24px 24px 0 0; /* Rounded top only */
+    max-height: 85%; overflow-y: auto;
+    display: flex; flex-direction: column;
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+}
+.modal-overlay.active .modal-card { transform: translateY(0); }
+
+/* The Handle Notch */
+.modal-notch { width: 40px; height: 5px; background-color: #e0e0e0; border-radius: 10px; margin: 12px auto 5px auto; flex-shrink: 0; }
+.modal-header { padding: 10px 25px 0 25px; display: flex; justify-content: space-between; align-items: center; }
+
+/* Modal Content */
+.modal-img { height: 200px; background-size: cover; background-position: center; margin-top: 10px; }
+.modal-body { padding: 20px 25px 40px 25px; }
+
+/* Close Buttons */
+.close-modal { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: white; width: 40px; height: 40px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 10; }
+.close-plain { background: none; border: none; font-size: 1.5rem; padding: 10px; color: #888; }
+
+/* Inputs & Buttons */
+input, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 10px; background: #f9f9f9; font-family: 'Poppins', sans-serif; font-size: 1rem; }
+input:focus, textarea:focus { outline: 2px solid var(--secondary); background: white; }
+.send-btn, .save-btn, .action-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1.05rem; }
+.action-btn { background: var(--secondary); margin-top: 20px; }
+
+/* Order List Styles */
+.order-item { background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 12px; position: relative; }
+.order-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: 600; color: var(--primary); font-size: 1rem; }
+.order-details { font-size: 0.9rem; color: #666; line-height: 1.4; }
+.order-date { font-size: 0.75rem; color: #aaa; margin-top: 8px; display: block; }
+.delete-order { position: absolute; bottom: 10px; right: 10px; color: #ff6b6b; background: white; border: 1px solid #ff6b6b; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; }
+
+/* Contact Styling */
+.contact-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.contact-card-inner { background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+.info-row { display: flex; gap: 15px; margin-bottom: 12px; font-size: 1rem; color: #555; align-items: center; }
+.info-row i { color: var(--secondary); width: 25px; text-align: center; font-size: 1.1rem; }
+.small-btn { font-size: 0.85rem; border: 1px solid var(--primary); background: none; color: var(--primary); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+.divider { border: 0; border-top: 1px solid #eee; margin: 25px 0; }
+
+/* Toast */
+.toast { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.9rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 3000; width: max-content; }
+.toast.show { opacity: 1; }
+
+@keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes fadeInUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes loadLine { to { width: 60px; } }
