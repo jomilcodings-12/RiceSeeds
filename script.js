@@ -1,33 +1,57 @@
 // --- DATA INIT ---
 const defaultVariants = [
-    { id: 1, name: "Thai Jasmine", tag: "Fragrant", origin: "Thailand", image: "https://images.unsplash.com/photo-1596791242301-447a064010ce?q=80&w=600", desc: "Famous for its floral aroma and soft texture." },
-    { id: 2, name: "Royal Basmati", tag: "Aromatic", origin: "India", image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=600", desc: "Long slender grains with a nutty flavor." },
-    { id: 3, name: "Arborio", tag: "Creamy", origin: "Italy", image: "https://images.unsplash.com/photo-1605626279934-2e2d09337060?q=80&w=600", desc: "Short-grain rice perfect for Risotto." }
+    { 
+        id: 1, 
+        name: "Thai Jasmine", 
+        tag: "Fragrant", 
+        origin: "Thailand", 
+        harvestDays: 115,
+        grainType: "Long Grain",
+        ecosystem: "Irrigated",
+        image: "https://images.unsplash.com/photo-1596791242301-447a064010ce?q=80&w=600", 
+        desc: "Famous for its floral aroma and soft texture. It requires sufficient water and is best grown in wet seasons." 
+    },
+    { 
+        id: 2, 
+        name: "Royal Basmati", 
+        tag: "Aromatic", 
+        origin: "India", 
+        harvestDays: 130,
+        grainType: "Extra Long",
+        ecosystem: "Rainfed",
+        image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=600", 
+        desc: "Long slender grains with a nutty flavor. Known for elongating almost twice its length upon cooking." 
+    },
+    { 
+        id: 3, 
+        name: "Arborio", 
+        tag: "Creamy", 
+        origin: "Italy", 
+        harvestDays: 160,
+        grainType: "Short Grain",
+        ecosystem: "Upland",
+        image: "https://images.unsplash.com/photo-1605626279934-2e2d09337060?q=80&w=600", 
+        desc: "Short-grain rice with high starch content, making it the perfect choice for creamy Risotto dishes." 
+    }
 ];
 
 let variants = JSON.parse(localStorage.getItem('oryzaVariants')) || defaultVariants;
-let orders = JSON.parse(localStorage.getItem('oryzaOrders')) || [];
-let currentOrderTarget = null;
 
 // --- DOM ELEMENTS ---
 const cardsContainer = document.getElementById('cards-container');
 const variantCount = document.getElementById('variant-count');
 const viewModal = document.getElementById('view-modal');
 const addModal = document.getElementById('add-modal');
-const orderFormModal = document.getElementById('order-form-modal');
-const orderHistoryModal = document.getElementById('order-history-modal');
 const contactModal = document.getElementById('contact-modal');
 const toast = document.getElementById('toast');
 const splash = document.getElementById('splash-screen');
 
 // --- INIT APP ---
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Activate Splash Timer
     setTimeout(() => { 
         splash.classList.add('hidden'); 
     }, 3000);
 
-    // 2. Load Content
     renderVariants();
     loadContactInfo();
 });
@@ -47,7 +71,9 @@ function renderVariants() {
                 <div onclick="openViewModal(${variant.id})">
                     <span class="card-tag">${variant.tag}</span>
                     <h4>${variant.name}</h4>
-                    <span style="font-size:0.8rem; color:#888;">${variant.origin}</span>
+                    <span style="font-size:0.8rem; color:#888;">
+                        <i class="fa-regular fa-clock"></i> ${variant.harvestDays} Days
+                    </span>
                 </div>
             </div>
         `;
@@ -66,7 +92,10 @@ function openViewModal(id) {
     document.getElementById('modal-origin').innerText = data.origin;
     document.getElementById('modal-desc').innerText = data.desc;
     
-    currentOrderTarget = data; 
+    document.getElementById('modal-days').innerText = `${data.harvestDays} Days`;
+    document.getElementById('modal-grain').innerText = data.grainType;
+    document.getElementById('modal-eco').innerText = data.ecosystem;
+    
     viewModal.classList.add('active');
 }
 
@@ -78,34 +107,46 @@ function closeAllModals() {
 // --- BUTTON LISTENERS ---
 document.getElementById('add-btn').addEventListener('click', () => addModal.classList.add('active'));
 document.getElementById('contact-btn').addEventListener('click', () => contactModal.classList.add('active'));
-document.getElementById('orders-btn').addEventListener('click', () => {
-    renderOrders();
-    orderHistoryModal.classList.add('active');
-});
-document.getElementById('open-order-form-btn').addEventListener('click', () => {
-    if(!currentOrderTarget) return;
-    viewModal.classList.remove('active');
-    document.getElementById('order-target-name').innerText = currentOrderTarget.name;
-    orderFormModal.classList.add('active');
-});
 
-// --- ADD / DELETE VARIANTS ---
+// --- ADD VARIANT WITH FILE UPLOAD ---
 document.getElementById('add-variant-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const newVariant = {
-        id: Date.now(),
-        name: document.getElementById('new-name').value,
-        tag: document.getElementById('new-tag').value,
-        origin: document.getElementById('new-origin').value,
-        image: document.getElementById('new-image').value,
-        desc: document.getElementById('new-desc').value
+
+    const fileInput = document.getElementById('new-image-file');
+    const file = fileInput.files[0];
+
+    // Helper to save
+    const saveVariantData = (imageUrl) => {
+        const newVariant = {
+            id: Date.now(),
+            name: document.getElementById('new-name').value,
+            tag: document.getElementById('new-tag').value,
+            origin: document.getElementById('new-origin').value,
+            harvestDays: document.getElementById('new-days').value,
+            grainType: document.getElementById('new-grain').value,
+            ecosystem: document.getElementById('new-eco').value,
+            image: imageUrl,
+            desc: document.getElementById('new-desc').value
+        };
+        
+        variants.unshift(newVariant);
+        localStorage.setItem('oryzaVariants', JSON.stringify(variants));
+        renderVariants();
+        e.target.reset();
+        closeAllModals();
+        showToast("Added Successfully");
     };
-    variants.unshift(newVariant);
-    localStorage.setItem('oryzaVariants', JSON.stringify(variants));
-    renderVariants();
-    e.target.reset();
-    closeAllModals();
-    showToast("Added Successfully");
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            saveVariantData(event.target.result); // Save Base64 string
+        };
+        reader.readAsDataURL(file);
+    } else {
+        // Fallback placeholder
+        saveVariantData("https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=600"); 
+    }
 });
 
 function deleteVariant(id) {
@@ -114,52 +155,6 @@ function deleteVariant(id) {
         localStorage.setItem('oryzaVariants', JSON.stringify(variants));
         renderVariants();
         showToast("Deleted");
-    }
-}
-
-// --- ORDER LOGIC ---
-document.getElementById('submit-order-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const newOrder = {
-        id: Date.now(),
-        item: currentOrderTarget.name,
-        qty: document.getElementById('order-qty').value,
-        customer: document.getElementById('order-customer').value,
-        location: document.getElementById('order-location').value,
-        date: new Date().toLocaleDateString()
-    };
-    orders.unshift(newOrder); 
-    localStorage.setItem('oryzaOrders', JSON.stringify(orders)); 
-    e.target.reset();
-    closeAllModals();
-    showToast("Order Placed!");
-});
-
-function renderOrders() {
-    const list = document.getElementById('orders-list');
-    list.innerHTML = '';
-    if(orders.length === 0) {
-        list.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">No orders yet.</p>';
-        return;
-    }
-    orders.forEach(order => {
-        const item = document.createElement('div');
-        item.classList.add('order-item');
-        item.innerHTML = `
-            <div class="order-header"><span>${order.item}</span><span>${order.qty} kg</span></div>
-            <div class="order-details">To: ${order.customer}<br>Loc: ${order.location}</div>
-            <span class="order-date">${order.date}</span>
-            <button class="delete-order" onclick="deleteOrder(${order.id})">Delete</button>
-        `;
-        list.appendChild(item);
-    });
-}
-
-function deleteOrder(id) {
-    if(confirm("Delete order?")) {
-        orders = orders.filter(o => o.id !== id);
-        localStorage.setItem('oryzaOrders', JSON.stringify(orders));
-        renderOrders(); 
     }
 }
 
