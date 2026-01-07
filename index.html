@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RiceSeeds App</title>
+    <title>RiceSeedsApp</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -27,29 +27,29 @@
                 <button id="add-btn" class="nav-icon-btn"><i class="fa-solid fa-plus"></i></button>
                 <button id="contact-btn" class="nav-icon-btn secondary-icon"><i class="fa-solid fa-envelope"></i></button>
             </div>
-            <div class="logo">Oryza.</div>
-            <button id="orders-btn" class="nav-icon-btn"><i class="fa-solid fa-bag-shopping"></i></button>
-        </nav>
+            <div class="logo">RiceSeeds.</div>
+            <div style="width: 45px;"></div> </nav>
 
         <div class="scroll-content">
             <header id="home" class="hero">
                 <div class="hero-overlay"></div>
                 <div class="hero-text">
-                    <h2>Premium Seeds</h2>
-                    <p>Manage & Order Collection.</p>
+                    <h2>Seed Database</h2>
+                    <p>Cataloging agricultural excellence.</p>
                 </div>
             </header>
 
             <section id="variants" class="variants-section">
                 <div class="section-header">
-                    <h3>Your Collection</h3>
+                    <h3>Seed Library</h3>
                     <span class="count-badge" id="variant-count">0 Items</span>
                 </div>
 
                 <div class="grid-container" id="cards-container">
                     </div>
                 
-                <div style="height: 120px;"></div> </section>
+                <div style="height: 120px;"></div>
+            </section>
         </div>
 
         <div class="modal-overlay" id="contact-modal">
@@ -83,47 +83,36 @@
                 <div class="modal-notch"></div>
                 <button class="close-modal" onclick="closeAllModals()"><i class="fa-solid fa-times"></i></button>
                 <div class="modal-img" id="modal-img"></div>
+                
                 <div class="modal-body">
                     <span class="tag" id="modal-tag">TAG</span>
                     <h2 id="modal-title">Title</h2>
-                    <div class="modal-stats">
-                        <span><i class="fa-solid fa-globe"></i> <span id="modal-origin">Origin</span></span>
+                    
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            <span class="info-label">Harvest</span>
+                            <span class="info-value" id="modal-days">0 Days</span>
+                        </div>
+                        <div class="info-box">
+                            <i class="fa-solid fa-ruler-horizontal"></i>
+                            <span class="info-label">Grain</span>
+                            <span class="info-value" id="modal-grain">Type</span>
+                        </div>
+                        <div class="info-box">
+                            <i class="fa-solid fa-water"></i>
+                            <span class="info-label">Ecosystem</span>
+                            <span class="info-value" id="modal-eco">Eco</span>
+                        </div>
                     </div>
-                    <p id="modal-desc">Description...</p>
-                    <button class="action-btn" id="open-order-form-btn">Order Seeds</button>
-                </div>
-            </div>
-        </div>
 
-        <div class="modal-overlay" id="order-form-modal">
-            <div class="modal-card">
-                <div class="modal-notch"></div>
-                <div class="modal-header">
-                    <h3>Place Order</h3>
-                    <button class="close-plain" onclick="closeAllModals()"><i class="fa-solid fa-times"></i></button>
-                </div>
-                <div class="modal-body">
-                    <p style="margin-bottom:15px; color:#666;">Item: <strong id="order-target-name" style="color:var(--primary);">Rice Name</strong></p>
-                    <form id="submit-order-form">
-                        <input type="number" id="order-qty" placeholder="Quantity (kg)" required min="1">
-                        <input type="text" id="order-customer" placeholder="Customer Name" required>
-                        <input type="text" id="order-location" placeholder="Delivery Address" required>
-                        <button type="submit" class="save-btn">Confirm Order</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="order-history-modal">
-            <div class="modal-card">
-                <div class="modal-notch"></div>
-                <div class="modal-header">
-                    <h3>My Orders</h3>
-                    <button class="close-plain" onclick="closeAllModals()"><i class="fa-solid fa-times"></i></button>
-                </div>
-                <div class="modal-body">
-                    <div id="orders-list" class="orders-list"></div>
-                    <button class="action-btn" onclick="closeAllModals()" style="background:#888; margin-top:10px;">Close</button>
+                    <div class="desc-box">
+                        <h4 style="margin-bottom:5px; color:var(--primary);">Origin & Traits</h4>
+                        <p id="modal-desc">Description...</p>
+                        <p style="margin-top:10px; font-size:0.9rem; color:#666;">
+                            <strong>Origin:</strong> <span id="modal-origin">Country</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,7 +121,7 @@
             <div class="modal-card">
                 <div class="modal-notch"></div>
                 <div class="modal-header">
-                    <h3>Add Seed</h3>
+                    <h3>Add New Seed</h3>
                     <button class="close-plain" onclick="closeAllModals()"><i class="fa-solid fa-times"></i></button>
                 </div>
                 <div class="modal-body">
@@ -140,9 +129,20 @@
                         <input type="text" id="new-name" placeholder="Name (e.g. Jasmine)" required>
                         <input type="text" id="new-tag" placeholder="Tag (e.g. Aromatic)" required>
                         <input type="text" id="new-origin" placeholder="Origin (e.g. Thailand)" required>
-                        <input type="url" id="new-image" placeholder="Image URL (https://...)" required>
+                        
+                        <div style="display:flex; gap:10px;">
+                            <input type="number" id="new-days" placeholder="Days (e.g. 115)" required>
+                            <input type="text" id="new-grain" placeholder="Grain (e.g. Long)" required>
+                        </div>
+                        <input type="text" id="new-eco" placeholder="Ecosystem (e.g. Irrigated)" required>
+
+                        <div class="file-input-container">
+                            <label for="new-image-file" style="font-size:0.9rem; color:#666; margin-bottom:5px; display:block;">Upload Image:</label>
+                            <input type="file" id="new-image-file" accept="image/*" required>
+                        </div>
+
                         <textarea id="new-desc" placeholder="Description" rows="3" required></textarea>
-                        <button type="submit" class="save-btn">Save</button>
+                        <button type="submit" class="save-btn">Save to Library</button>
                     </form>
                 </div>
             </div>
@@ -152,5 +152,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>
